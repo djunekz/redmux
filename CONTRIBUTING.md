@@ -24,11 +24,12 @@ Thank you for considering a contribution. Bug reports, tested compatibility note
 Run syntax checks for every shell script:
 
 ```bash
-find . -type f -name '*.sh' -o -name redmux | while read -r file; do bash -n "$file" || exit 1; done
+find . -type f \( -name '*.sh' -o -name redmux \) -print0 | while IFS= read -r -d '' file; do bash -n "$file" || exit 1; done
 ```
 
 Also verify, where practical:
 
+- `bash tests/test-ui.sh` passes at 32, 36, 40, 64, and 80 columns.
 - The main menu and `redmux help` render in Termux and plain-text output.
 - Missing dependencies produce a clear opt-in installation prompt.
 - Existing PRoot-Distro environments are detected correctly.

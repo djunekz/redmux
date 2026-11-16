@@ -22,9 +22,13 @@ source "$REDMUX_HOME/modules/uninstaller.sh"
 setup_redmux() {
   require_termux
   local target="$PREFIX/share/redmux" bin="$PREFIX/bin/redmux"
-  mkdir -p "$target" "$PREFIX/bin"
+  mkdir -p "$target/core" "$target/modules" "$target/config" "$target/assets" "$PREFIX/bin"
   if [[ "$(cd "$REDMUX_HOME" && pwd)" != "$(cd "$target" && pwd)" ]]; then
-    cp -a "$REDMUX_HOME"/. "$target"/
+    cp "$REDMUX_HOME/redmux" "$target/redmux"
+    cp -a "$REDMUX_HOME/core/." "$target/core/"
+    cp -a "$REDMUX_HOME/modules/." "$target/modules/"
+    cp -a "$REDMUX_HOME/config/." "$target/config/"
+    [[ ! -f "$REDMUX_HOME/assets/banner.txt" ]] || cp "$REDMUX_HOME/assets/banner.txt" "$target/assets/banner.txt"
   fi
   chmod +x "$target/redmux"
   cat > "$bin" <<'WRAPPER'

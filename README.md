@@ -1,82 +1,74 @@
-# REDMUX
+<div align="center">
+  <img src="assets/logo.svg" alt="REDMUX logo" width="280">
+  <h1>REDMUX</h1>
+  <p><strong>Termux Linux Desktop Manager</strong></p>
+  <p>A cleaner way to build and manage a Linux desktop on Android.</p>
+  <img src="assets/menu.svg" alt="REDMUX dashboard preview" width="100%">
+  <p><strong>Version 1.0.0</strong> · Android · Termux · PRoot-Distro · Termux:X11</p>
+</div>
 
-<p align="center">
-  <img src="assets/logo.svg" alt="REDMUX logo" width="180">
-</p>
+REDMUX is a terminal-based manager for installing a Linux distribution in Termux, adding a desktop environment, and launching its graphical session through Termux:X11. It provides an interactive dashboard as well as direct commands for installation, sessions, configuration, diagnostics, logs, and removal.
 
-<h1 align="center">REDMUX</h1>
-<p align="center"><strong>Termux Linux Desktop Manager</strong></p>
-<p align="center">Build, manage, and launch Linux desktop environments on Android with Termux and PRoot-Distro.</p>
+> REDMUX does not provide a Linux kernel or a full virtual machine. Linux environments run through PRoot-Distro and inherit its compatibility limitations.
 
-<p align="center">
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-20c997?style=for-the-badge">
-  <img alt="Platform" src="https://img.shields.io/badge/platform-Termux-111827?style=for-the-badge">
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-64748b?style=for-the-badge">
-</p>
+## Contents
 
-> **Release status:** REDMUX remains at **1.0.0**. This project is intended for testing; compatibility depends on the Android device, Termux build, distribution repositories, and desktop package versions.
-
-## Project artwork
-
-- `assets/logo.svg` — REDMUX terminal emblem.
-- `assets/menu.svg` — dashboard/menu concept artwork.
-- `assets/banner.txt` — terminal banner displayed by the CLI.
-
-## Overview
-
-REDMUX is a command-line manager for installing and operating Linux distributions under [PRoot-Distro](https://github.com/termux/proot-distro), then launching supported desktop environments through [Termux:X11](https://github.com/termux/termux-x11). It provides a guided installer, multi-desktop selection, resumable installation stages, session controls, diagnostics, logs, and uninstall options.
-
-REDMUX does not virtualize hardware or provide a full systemd boot environment. PRoot is a userspace compatibility layer, so some services and desktop features may behave differently from a conventional Linux installation.
+- [Features](#features)
+- [Preview and artwork](#preview-and-artwork)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [First-time setup](#first-time-setup)
+- [Commands](#commands)
+- [Supported environments](#supported-environments)
+- [Configuration](#configuration)
+- [Files and data](#files-and-data)
+- [Uninstall](#uninstall)
+- [Troubleshooting](#troubleshooting)
+- [Documentation](#documentation)
+- [Development](#development)
+- [Contributing](#contributing)
+- [Disclaimer](#disclaimer)
+- [License](#license)
 
 ## Features
 
-- Guided selection of Debian, Ubuntu, or Kali Linux.
-- Install one or multiple desktop environments in one setup: XFCE4, KDE Plasma, LXQt, MATE, LXDE, and GNOME.
-- Select the default desktop and choose an installed desktop at launch when multiple environments are configured.
-- Check and offer to install missing Termux dependencies, including PRoot-Distro.
-- Install the Linux root filesystem through PRoot-Distro.
-- Prepare APT, repair interrupted package configuration, and install missing desktop packages.
-- Save installation progress and resume matching unfinished installations.
-- Prepare the Termux:X11 command-line package when needed.
-- Start, stop, and restart desktop sessions.
-- Open a Linux shell, inspect environments, view status, diagnostics, and logs.
-- Remove the REDMUX installation separately from Linux distributions.
-- Keep the cloned source repository untouched during REDMUX uninstall operations.
+- Interactive dashboard with a consistent cyan and blue terminal theme.
+- Linux distribution setup using PRoot-Distro.
+- Guided selection of one or more desktop environments.
+- Desktop launch and stop commands using Termux:X11.
+- Installation stages with resumable state for matching selections.
+- Configuration management, environment listing, status checks, and diagnostics.
+- Timestamped activity log and guarded uninstall workflow.
+- Plain-text fallback when output is redirected or `NO_COLOR` is set.
+- SVG logo and dashboard artwork included in the installed application directory.
 
-## Supported environments
+## Preview and artwork
 
-| Component | Supported choices | Notes |
-|---|---|---|
-| Linux distribution | Debian, Ubuntu, Kali Linux | Installed using PRoot-Distro aliases |
-| Desktop | XFCE4, KDE Plasma, LXQt, MATE, LXDE, GNOME | Package availability varies by distribution |
-| Display | Termux:X11 | Android companion app is installed separately |
-| Architecture | Device/Termux supported architectures | Package availability is controlled by upstream repositories |
+The preview above is the project illustration stored at `assets/menu.svg`. GitHub renders it directly from the repository. It is not copied by `redmux setup` and is not needed at runtime. The live dashboard is rendered separately by the shell interface; its single-column layout uses fixed-width ASCII borders so the frame stays aligned across terminal fonts and display widths.
 
-XFCE4 is a sensible first desktop to try on devices with limited memory. KDE Plasma and GNOME can require substantially more storage and memory. This is guidance, not a guaranteed performance ranking for every device.
+| Asset | Purpose |
+| --- | --- |
+| `assets/logo.svg` | Project logo and brand mark |
+| `assets/menu.svg` | README dashboard preview only; not installed on the device |
+| `assets/banner.txt` | Text banner shown in the terminal |
 
 ## Requirements
 
-- Android device with a working Termux installation.
-- Termux packages and plugins from compatible sources. Avoid mixing Termux builds from unrelated distribution channels.
-- Working internet connection during package and root filesystem downloads.
-- Sufficient free storage. A desktop installation can consume several gigabytes; the exact amount depends on the selected distribution and desktop packages.
-- Termux:X11 Android application for graphical sessions.
+- Android device supported by your Termux distribution.
+- A current Termux installation from a supported source.
+- Working network connection for package and root filesystem downloads.
+- Sufficient free storage for the selected Linux distribution and desktop packages. Desktop installations can require several gigabytes.
+- Termux:X11 Android application installed separately.
+- Termux-side `termux-x11` command/package for graphical sessions.
 
-### Termux:X11 components
-
-Termux:X11 has two parts:
-
-1. The Termux-side command-line package, which REDMUX can check and prepare.
-2. The Android Termux:X11 application, which must be installed separately from its official project releases.
-
-Installing the CLI package does not install the Android application. See the [Termux:X11 project](https://github.com/termux/termux-x11).
+REDMUX can install PRoot-Distro when it is missing. Package availability and desktop compatibility depend on the selected distribution release and device architecture.
 
 ## Installation
 
-Clone the repository:
+Install the project from its source directory:
 
 ```bash
-pkg update
+pkg update && pkg upgrade
 pkg install git
 git clone https://github.com/djunekz/redmux.git
 cd redmux
@@ -84,143 +76,162 @@ chmod +x redmux
 ./redmux setup
 ```
 
-The `setup` command copies REDMUX into Termux's shared application prefix and installs a `redmux` launcher in `$PREFIX/bin`. The cloned repository remains available for editing and updates.
+After setup, the `redmux` command is installed in `$PREFIX/bin` and the application files are copied to `$PREFIX/share/redmux`.
 
-To run directly from the cloned source without installing the launcher:
-
-```bash
-chmod +x redmux
-./redmux
-```
-
-## Quick start
+To run without installing the launcher, use:
 
 ```bash
-redmux install
-redmux start
+bash redmux
 ```
 
-Open a shell inside the configured Linux distribution:
+## First-time setup
 
-```bash
-redmux shell
-```
+1. Open REDMUX with `redmux`.
+2. Select **Install Linux + Desktop**.
+3. Choose Debian, Ubuntu, or Kali Linux.
+4. Choose one or more desktop environments when prompted.
+5. Review the installation plan and allow the installation stages to finish.
+6. Install and open the Android Termux:X11 application.
+7. Start the desktop with `redmux start`.
 
-If more than one desktop environment was selected and installed, REDMUX asks which one to launch.
+Keep Termux open while package installation is running. Do not interrupt APT or dpkg while packages are being configured. If an installation is interrupted, run `redmux install` again; completed stages may be reused when the distribution and desktop selection match.
 
-## Command reference
+## Commands
 
 | Command | Description |
-|---|---|
-| `redmux` | Open the interactive dashboard |
-| `redmux install` | Install or resume a Linux desktop setup |
-| `redmux start [distro]` | Launch the configured desktop |
-| `redmux stop` | Stop the desktop session started by REDMUX |
+| --- | --- |
+| `redmux` or `redmux menu` | Open the interactive dashboard |
+| `redmux setup` | Install/update the command launcher and application files |
+| `redmux install` | Install or resume Linux and desktop setup |
+| `redmux start [distro]` | Start the configured desktop session |
+| `redmux stop` | Stop the active desktop session and the REDMUX-managed X11 process |
 | `redmux restart` | Stop and start the desktop session |
-| `redmux shell [distro]` | Open a shell in a supported distribution |
-| `redmux environments` | Display PRoot-Distro environment information |
-| `redmux desktop` | Choose the default desktop environment |
-| `redmux status` | Show configured distribution, desktop, and X11 status |
+| `redmux shell [distro]` | Open a shell inside a Linux distribution |
+| `redmux environments` | List PRoot-Distro environments |
+| `redmux desktop` | Select the default desktop environment |
+| `redmux status` | Display configuration and session status |
 | `redmux config` | Open configuration options |
-| `redmux logs` | Display recent REDMUX logs |
 | `redmux diagnose` | Check dependencies and installation state |
-| `redmux uninstall` | Open the uninstall manager |
-| `redmux setup` | Install or refresh the Termux launcher |
-| `redmux version` | Print the current version |
-| `redmux help` | Show command help |
+| `redmux logs` | Display recent REDMUX logs |
+| `redmux uninstall` | Open the guarded removal workflow |
+| `redmux version` | Print the installed version |
+| `redmux help` | Display command help |
 
-## Installation workflow
+The dashboard accepts options `01` through `10`; enter `00` or `0` to exit. Single-digit choices are accepted for convenience.
 
-The installer follows these major stages:
+## Supported environments
 
-1. **Preflight** — verify Termux commands, offer to install PRoot-Distro if missing, check required packages, and inspect available storage.
-2. **Configuration** — select a Linux distribution and one or more desktop environments.
-3. **Root filesystem** — install the selected distribution using PRoot-Distro, or reuse an existing installation.
-4. **APT preparation** — update package indexes and repair pending package configuration.
-5. **Desktop packages** — install the selected desktop packages and shared utilities.
-6. **Verification** — verify that the selected desktop session packages are installed.
-7. **X11 preparation** — check and prepare the Termux-side Termux:X11 command.
+### Linux distributions
 
-The progress indicator represents installer stages. Download progress for root filesystems is provided by PRoot-Distro, while APT reports package download and installation activity.
+- Debian
+- Ubuntu
+- Kali Linux
 
-## Resuming an interrupted installation
+### Desktop environments
 
-If an installation is interrupted, run:
+- XFCE4
+- KDE Plasma
+- LXQt
+- MATE
+- LXDE
+- GNOME
+
+The package names and session commands are defined in `core/desktop.sh`. Not every desktop is equally suitable for PRoot or every device. XFCE4 is a practical lightweight starting point for many devices, but actual compatibility should be tested on the target device.
+
+## Configuration
+
+Use the interactive configuration screen:
 
 ```bash
-redmux install
+redmux config
 ```
 
-When the saved distribution and desktop selection match, REDMUX resumes from the last completed stage. If you choose a different configuration, REDMUX asks whether to replace the previous installation state.
+The default configuration file is:
 
-APT may reuse packages already present in its local cache. A failed stage is not considered complete; inspect the error output and logs before retrying.
+```text
+~/.config/redmux/redmux.conf
+```
 
-## Configuration and data locations
+Available settings include:
+
+| Variable | Default | Meaning |
+| --- | --- | --- |
+| `REDMUX_DISTRO` | `debian` | Default Linux distribution |
+| `REDMUX_DESKTOP` | `xfce` | Default desktop environment |
+| `REDMUX_DESKTOPS` | `xfce` | Comma-separated configured desktop environments |
+| `REDMUX_DISPLAY` | `:1` | X11 display identifier |
+| `REDMUX_RESOLUTION` | empty | Optional resolution setting |
+
+Prefer `redmux config` so values are written in the expected format. Back up the configuration before manual edits.
+
+## Files and data
 
 | Path | Purpose |
-|---|---|
+| --- | --- |
 | `~/.config/redmux/redmux.conf` | User configuration |
-| `~/.local/share/redmux/install.state` | Temporary resumable installation state |
-| `~/.local/share/redmux/` | REDMUX runtime state, including X11 PID data |
-| `~/.local/state/redmux/redmux.log` | REDMUX log file |
-| `$PREFIX/share/redmux/` | Installed REDMUX program files after `redmux setup` |
-| `$PREFIX/bin/redmux` | Installed command launcher |
+| `~/.local/share/redmux/install.state` | Resumable installer state |
+| `~/.local/state/redmux/redmux.log` | Activity log |
+| `$PREFIX/share/redmux/` | Runtime files (`redmux`, `core/`, `modules/`, `config/`, and terminal banner) |
+| `$PREFIX/bin/redmux` | Command launcher |
 
-Configuration is managed through `redmux config`. Avoid editing the configuration while an installation is running.
+The source checkout is separate from the installed copy. Removing the installed application does not delete the source checkout.
 
-## Uninstall behavior
+## Uninstall
 
-REDMUX provides separate removal paths:
-
-- **Remove REDMUX only:** removes the installed launcher, installed program copy, and REDMUX user configuration/state/log data. It does not remove the cloned source repository.
-- **Full clean uninstall:** asks for an explicit typed confirmation before removing the selected PRoot-Distro environment(s). The source repository is not deleted. You can optionally remove the installed REDMUX program afterward.
-
-Removing a Linux distribution permanently deletes the applications, packages, and user data stored inside that distribution. Back up important files first.
+The uninstall workflow distinguishes between removing REDMUX and removing Linux environments. Removing a distribution deletes its installed packages and user data inside that environment. Back up important files first and read each confirmation prompt carefully. Full environment removal requires explicit confirmation.
 
 ## Troubleshooting
 
-### `proot-distro` is missing
+Start by collecting the following information:
 
-Run `redmux install` and accept the prompt to install PRoot-Distro. If package installation fails, check the Termux repository configuration and internet connection, then run `pkg update` and retry.
+```bash
+redmux version
+redmux status
+redmux diagnose
+redmux logs
+proot-distro list
+```
 
-### Root filesystem download fails
+Common issues and recovery steps are covered in [the troubleshooting guide](docs/TROUBLESHOOTING.md). Remove private paths, usernames, tokens, and other sensitive details before sharing diagnostic output.
 
-Check connectivity, free storage, and whether the upstream registry is reachable. Retry `redmux install`; PRoot-Distro controls root filesystem downloads and retries.
+## Documentation
 
-### APT or desktop package installation fails
-
-Read the last APT error in the terminal and inspect `redmux logs`. Common causes include interrupted package configuration, unavailable mirrors, insufficient storage, or packages that are not available for the selected distribution release. Resolve the reported issue and rerun `redmux install`.
-
-### Desktop is installed but does not start
-
-Confirm that the Android Termux:X11 app is installed and opened, then run `redmux diagnose`. Check `redmux logs` and verify that the selected desktop package is installed. Some desktop components expect systemd, logind, or services that are not fully available under PRoot.
-
-### No graphical window appears
-
-Check that the Termux:X11 Android app and Termux CLI package are compatible versions. Confirm that Android has not restricted background execution for Termux. Then run `redmux stop` and retry `redmux start`.
-
-### Need to report a bug
-
-Please include the output of `redmux version`, `redmux diagnose`, the relevant terminal error, Android version, device architecture, Termux source, and the distribution/desktop selection. Remove usernames, private paths, tokens, and other sensitive information before posting.
-
-## Project documentation
-
-- [Architecture](docs/ARCHITECTURE.md)
 - [Installation and testing](docs/INSTALLATION.md)
-- [Troubleshooting guide](docs/TROUBLESHOOTING.md)
-- [Security policy](SECURITY.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Troubleshooting](docs/TROUBLESHOOTING.md)
+- [Command reference](docs/COMMANDS.md)
+- [Configuration reference](docs/CONFIGURATION.md)
+- [Termux:X11 guide](docs/TERMUX-X11.md)
+- [Testing guide](docs/TESTING.md)
+- [Project structure](docs/PROJECT-STRUCTURE.md)
+- [Release checklist](docs/RELEASE-CHECKLIST.md)
+- [FAQ](FAQ.md)
+- [Roadmap](ROADMAP.md)
+- [Changelog](CHANGELOG.md)
 - [Contributing](CONTRIBUTING.md)
+- [Security policy](SECURITY.md)
 - [Support](SUPPORT.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
-- [Changelog](CHANGELOG.md)
+
+## Development
+
+Run syntax checks before submitting changes:
+
+```bash
+bash -n redmux
+for file in core/*.sh modules/*.sh tests/*.sh; do bash -n "$file" || exit 1; done
+bash tests/test-ui.sh
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution workflow. Syntax checks are not a substitute for testing package installation and desktop sessions on a real Android device.
 
 ## Contributing
 
-Bug reports, compatibility notes, documentation improvements, and focused pull requests are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before submitting changes. Keep the project version at `1.0.0` until an official release decision is made.
+Bug reports, device compatibility notes, documentation updates, and focused pull requests are welcome. Use the issue templates when reporting a bug or proposing a feature. Please include reproducible steps and relevant diagnostics, with private information removed.
 
 ## Disclaimer
 
-REDMUX is an independent community project and is not affiliated with or endorsed by the Termux, PRoot-Distro, Debian, Ubuntu, Kali Linux, or Termux:X11 maintainers. Linux distributions and desktop environments are provided by their respective upstream projects. Use at your own risk and keep backups of important data.
+REDMUX is an independent community project and is not affiliated with or endorsed by the Termux, PRoot-Distro, Debian, Ubuntu, Kali Linux, or Termux:X11 maintainers. Linux distributions, desktop environments, and supporting applications remain the property of their respective projects. Use at your own risk and keep backups of important data.
 
 ## License
 

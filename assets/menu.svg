@@ -1,1 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title desc"><title id="title">REDMUX dashboard menu</title><desc id="desc">Illustrated REDMUX terminal dashboard with install, session, Linux, desktop, tools, and exit options.</desc><defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#172554"/></linearGradient><linearGradient id="accent"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#3b82f6"/></linearGradient></defs><rect width="960" height="420" rx="28" fill="url(#bg)"/><rect x="24" y="24" width="912" height="372" rx="18" fill="#0f172a" stroke="#334155" stroke-width="2"/><circle cx="58" cy="54" r="7" fill="#fb7185"/><circle cx="82" cy="54" r="7" fill="#fbbf24"/><circle cx="106" cy="54" r="7" fill="#4ade80"/><text x="140" y="62" fill="#94a3b8" font-family="monospace" font-size="18">redmux — interactive dashboard</text><text x="58" y="132" fill="url(#accent)" font-family="monospace" font-size="54" font-weight="700">REDMUX</text><text x="60" y="164" fill="#cbd5e1" font-family="sans-serif" font-size="18" letter-spacing="3">TERMUX LINUX DESKTOP MANAGER</text><path d="M58 190h844" stroke="#334155"/><g font-family="monospace" font-size="20" fill="#e2e8f0"><text x="66" y="236"><tspan fill="#22d3ee">01</tspan><tspan dx="18">Install Linux + Desktop</tspan></text><text x="500" y="236"><tspan fill="#22d3ee">02</tspan><tspan dx="18">Start Desktop</tspan></text><text x="66" y="282"><tspan fill="#22d3ee">03</tspan><tspan dx="18">Stop Desktop</tspan></text><text x="500" y="282"><tspan fill="#22d3ee">04</tspan><tspan dx="18">Open Linux Shell</tspan></text><text x="66" y="328"><tspan fill="#22d3ee">05</tspan><tspan dx="18">Environments &amp; Desktops</tspan></text><text x="500" y="328"><tspan fill="#22d3ee">06</tspan><tspan dx="18">Status, Config &amp; Logs</tspan></text></g><text x="66" y="370" fill="#64748b" font-family="monospace" font-size="15">redmux › _</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 900" role="img" aria-labelledby="title desc">
+<title id="title">REDMUX terminal dashboard preview</title>
+<desc id="desc">A single-column REDMUX dashboard with aligned ASCII borders and grouped installation, session, Linux tools, management, and exit commands.</desc>
+<defs>
+  <linearGradient id="background" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07111f"/><stop offset="1" stop-color="#101b35"/></linearGradient>
+  <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#22d3ee"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+</defs>
+<rect width="960" height="900" rx="28" fill="url(#background)"/>
+<rect x="22" y="22" width="916" height="856" rx="20" fill="#080f1d" stroke="#31527b" stroke-width="2"/>
+<circle cx="58" cy="56" r="8" fill="#fb7185"/><circle cx="86" cy="56" r="8" fill="#fbbf24"/><circle cx="114" cy="56" r="8" fill="#4ade80"/>
+<text x="150" y="63" fill="#94a3b8" font-family="monospace" font-size="19">redmux — terminal dashboard</text>
+<text x="62" y="160" fill="url(#cyan)" font-family="monospace" font-size="94" font-weight="800" letter-spacing="-5">REDMUX</text>
+<text x="66" y="198" fill="#8ca7c7" font-family="monospace" font-size="19" letter-spacing="2">TERMUX LINUX DESKTOP MANAGER · v1.0.0</text>
+<text x="66" y="230" fill="#22a6b8" font-family="monospace" font-size="18">A cleaner way to build your Linux desktop on Android.</text>
+<path d="M62 258H898" stroke="#31527b" stroke-width="2"/>
+<rect x="62" y="286" width="836" height="530" rx="14" fill="#0c1729" stroke="#42658f" stroke-width="2"/>
+<text x="480" y="326" text-anchor="middle" fill="#60a5fa" font-family="monospace" font-size="24" font-weight="700">REDMUX DASHBOARD</text>
+<path d="M88 346H872" stroke="#294363" stroke-width="2"/>
+<g font-family="monospace" font-size="21">
+  <g fill="#22d3ee" font-weight="700">
+    <text x="100" y="390">INSTALL</text>
+    <text x="100" y="486">SESSION</text>
+    <text x="100" y="582">LINUX &amp; TOOLS</text>
+    <text x="100" y="678">MANAGEMENT</text>
+  </g>
+  <g fill="#22d3ee"><text x="118" y="426">01</text><text x="118" y="458">02</text><text x="118" y="522">03</text><text x="118" y="554">04</text><text x="118" y="618">05</text><text x="118" y="650">06</text><text x="118" y="714">07</text><text x="118" y="746">08</text><text x="118" y="778">09</text><text x="118" y="810">10</text></g>
+  <g fill="#d8e7f8">
+    <text x="174" y="426">Install Linux + Desktop</text>
+    <text x="174" y="458">Start Desktop</text>
+    <text x="174" y="522">Stop Desktop</text>
+    <text x="174" y="554">Open Linux Shell</text>
+    <text x="174" y="618">Environments</text>
+    <text x="174" y="650">Desktop Selection</text>
+    <text x="174" y="714">Status &amp; Diagnostics</text>
+    <text x="174" y="746">Configuration</text>
+    <text x="174" y="778">View Activity Logs</text>
+    <text x="174" y="810">Uninstall</text>
+  </g>
+</g>
+<path d="M88 834H872" stroke="#294363" stroke-width="2"/>
+<text x="100" y="870" fill="#fbbf24" font-family="monospace" font-size="20" font-weight="700">00</text>
+<text x="156" y="870" fill="#d8e7f8" font-family="monospace" font-size="20">Exit</text>
+</svg>

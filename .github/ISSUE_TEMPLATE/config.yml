@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Documentation and troubleshooting
-    url: https://github.com/djunekz/redmux#troubleshooting
-    about: Read the README and troubleshooting guide before opening an issue.
+  - name: REDMUX documentation
+    url: https://github.com/djunekz/redmux/tree/main/docs
+    about: Read the installation, command, configuration, and troubleshooting guides.
+  - name: Security vulnerability
+    url: https://github.com/djunekz/redmux/security/policy
+    about: Read the security policy before reporting a vulnerability.

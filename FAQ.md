@@ -6,7 +6,7 @@ REDMUX can prepare the Termux-side CLI package. The Android application must be 
 
 ## Can I install more than one desktop environment?
 
-Yes. Select multiple desktop entries during installation using comma-separated numbers. The installer combines the selected package lists and the launcher offers installed desktops for the session.
+Yes. Select multiple desktop entries during installation using comma-separated numbers. The installer combines the selected package lists and the session menu offers the detected installed desktops when more than one is configured.
 
 ## Can I use REDMUX without installing its command globally?
 

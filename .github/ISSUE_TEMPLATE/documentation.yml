@@ -1,0 +1,27 @@
+name: Documentation improvement
+description: Report unclear, missing, or incorrect documentation.
+title: "docs: "
+labels: ["documentation"]
+body:
+  - type: textarea
+    id: page
+    attributes:
+      label: Documentation page
+      description: Which file or page needs an update?
+      placeholder: README.md or docs/INSTALLATION.md
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What should be improved?
+      description: Explain what is unclear, missing, or incorrect.
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change
+      description: Include wording or examples if available.
+    validations:
+      required: false
