@@ -10,6 +10,6 @@ diagnostics() {
   df -h "$HOME"
   echo "Config : $REDMUX_CONFIG"
   echo "Logs   : $LOG_FILE"
-  [[ -f "$REDMUX_STATE" ]] && { echo "Install state: resume available"; sed 's/^/  /' "$REDMUX_STATE"; } || echo "Install state: tidak ada proses tertunda"
+  [[ -f "$REDMUX_STATE" ]] && { echo "Install state: resume available"; sed 's/^/  /' "$REDMUX_STATE"; } || echo "Install state: no pending installation"
   echo "The Android Termux:X11 app must be installed separately from its CLI package."
 }

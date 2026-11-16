@@ -4,12 +4,11 @@
 redmux/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
-│   ├── FUNDING.yml
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── assets/
 │   ├── banner.txt
 │   ├── logo.svg
-│   └── menu.svg  (README preview only)
+│   └── menu.svg
 ├── config/
 │   └── defaults.conf
 ├── desktops/
@@ -27,6 +26,9 @@ redmux/
 │   ├── installer.sh
 │   └── uninstaller.sh
 ├── tests/
+│   ├── test-config.sh
+│   ├── test-setup.sh
+│   ├── test-session-safety.sh
 │   └── test-ui.sh
 ├── .gitignore
 ├── CHANGELOG.md
@@ -41,4 +43,4 @@ redmux/
 └── redmux
 ```
 
-The entry point loads core services and feature modules, then dispatches the requested command. The `core` directory contains shared runtime behavior; `modules` contains higher-level workflows; `assets` contains terminal and project artwork; `docs` contains user and developer documentation.
+The entry point loads core services and feature modules, then dispatches the requested command. `core/` contains shared runtime behavior; `modules/` contains higher-level workflows; `assets/` contains terminal and repository artwork; `docs/` contains user and developer guides, including the repeatable quality-check procedure. `assets/menu.svg` and `assets/logo.svg` are repository-only artwork. `redmux setup` copies the terminal banner but not the SVG files.

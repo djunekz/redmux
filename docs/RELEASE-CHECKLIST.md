@@ -1,16 +1,38 @@
 # Release Checklist
 
-- [ ] Update the changelog with user-visible changes.
-- [ ] Confirm the version in `core/utils.sh` and help output.
-- [ ] Run `bash -n redmux`.
-- [ ] Run syntax checks for every shell file in `core/` and `modules/`.
-- [ ] Verify executable permissions for the entry point.
-- [ ] Verify `assets/banner.txt` exists for the terminal banner.
-- [ ] Verify `assets/menu.svg` renders in the GitHub README preview and is not copied by the Termux installer.
-- [ ] Run `bash tests/test-ui.sh` and inspect the dashboard at narrow and wide terminal widths.
-- [ ] Run `./redmux setup` in a test Termux environment.
-- [ ] Confirm the installed copy contains only runtime files and the terminal banner.
-- [ ] Test dashboard navigation and invalid input handling.
-- [ ] Test install/resume, diagnostics, session start/stop, and uninstall safeguards on a real device.
+## Source and version
+
+- [ ] Confirm the intended version and update `REDMUX_VERSION` in `core/utils.sh`.
+- [ ] Update the version displayed by `redmux help`.
+- [ ] Record user-visible changes in `CHANGELOG.md`.
+- [ ] Review every changed file and remove temporary or generated artifacts.
+
+## Static validation
+
+- [ ] Run `bash -n` for `redmux`, every script in `core/`, `modules/`, and `tests/`.
+- [ ] Run `bash tests/test-ui.sh` at the supported terminal widths.
+- [ ] Run `bash tests/test-config.sh` to validate safe configuration loading.
+- [ ] Run `bash tests/test-setup.sh` to verify the installed file boundary.
+- [ ] Run `bash tests/test-session-safety.sh` to verify unrelated processes are not signalled.
+- [ ] Validate relative Markdown links.
+- [ ] Validate GitHub issue-template YAML.
+- [ ] Validate `assets/logo.svg` and `assets/menu.svg` as XML.
+- [ ] Verify executable permissions for the entry point and test script.
+
+## Runtime validation
+
+- [ ] Verify `./redmux setup` in a disposable Termux environment.
+- [ ] Confirm only runtime files and `assets/banner.txt` are copied to the installed directory.
+- [ ] Test dashboard navigation, invalid input, help, version, and logs.
+- [ ] Test configuration validation and safe configuration loading.
+- [ ] Test install/resume and failed-stage recovery.
+- [ ] Test desktop start/stop and confirm unrelated processes remain untouched.
+- [ ] Test diagnostics and guarded uninstall on a disposable environment.
+- [ ] Test Termux:X11 and each claimed desktop on a real Android device.
+
+## Release publication
+
 - [ ] Review README links and GitHub issue templates.
-- [ ] Tag and publish the release only after device testing.
+- [ ] Review the changelog and release notes.
+- [ ] Confirm the source checkout is not removed by uninstall flows.
+- [ ] Tag and publish only after required device tests pass.

@@ -54,7 +54,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 export NEEDRESTART_MODE=a
 apt-get update
- dpkg --configure -a
+dpkg --configure -a
 apt-get --fix-broken install -y
 packages="$packages"
 missing=""
@@ -101,7 +101,7 @@ run_installer() {
   fi
   if ! state_has 2; then
     ui_stage 2 "$total" "Preparing the Linux package manager"
-    if ! proot-distro login --shared-tmp "$REDMUX_DISTRO" -- /bin/bash -lc 'export DEBIAN_FRONTEND=noninteractive; export NEEDRESTART_MODE=a; apt-get update && dpkg --configure -a && apt-get --fix-broken install -y'; then
+    if ! proot-distro login --shared-tmp "$REDMUX_DISTRO" -- /bin/bash -lc 'export DEBIAN_FRONTEND=noninteractive; export NEEDRESTART_MODE=a; apt-get update &&dpkg --configure -a && apt-get --fix-broken install -y'; then
       ui_fail "Could not prepare APT inside $REDMUX_DISTRO"
       ui_warn "The command output above contains the package-manager error. Fix the reported issue and run redmux install again."
       return 1

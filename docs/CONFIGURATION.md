@@ -1,28 +1,35 @@
 # Configuration Reference
 
-REDMUX stores per-user settings in `~/.config/redmux/redmux.conf`.
+REDMUX stores user settings in `~/.config/redmux/redmux.conf`. Use `redmux config` to edit supported values.
 
 ## Settings
 
-| Name | Default | Description |
-| --- | --- | --- |
-| `REDMUX_DISTRO` | `debian` | Default PRoot-Distro alias |
-| `REDMUX_DESKTOP` | `xfce` | Default desktop key |
-| `REDMUX_DESKTOPS` | `xfce` | Comma-separated desktop keys |
-| `REDMUX_DISPLAY` | `:1` | X11 display used for the desktop session |
-| `REDMUX_RESOLUTION` | empty | Reserved optional resolution value |
-
-## Supported desktop keys
-
-`xfce`, `kde`, `lxqt`, `mate`, `lxde`, and `gnome`.
+| Name | Default | Accepted values | Description |
+| --- | --- | --- | --- |
+| `REDMUX_DISTRO` | `debian` | `debian`, `ubuntu`, `kali` | Default PRoot-Distro alias |
+| `REDMUX_DESKTOP` | `xfce` | `xfce`, `kde`, `lxqt`, `mate`, `lxde`, `gnome` | Default desktop key |
+| `REDMUX_DESKTOPS` | `xfce` | Comma-separated desktop keys | Desktop environments selected for installation |
+| `REDMUX_DISPLAY` | `:1` | `:0`, `:1`, `:2`, and other numeric displays | Termux:X11 display identifier |
+| `REDMUX_RESOLUTION` | Empty | Empty or `WIDTHxHEIGHT` | Reserved value; not currently applied to the session |
 
 ## Editing settings
 
-Run `redmux config` to change settings through the supported interface. If editing the file manually, use valid shell assignment syntax and quote string values. Invalid shell syntax can prevent REDMUX from loading its configuration.
+Run:
+
+```bash
+redmux config
+```
+
+The configuration reader accepts only the recognized keys and validates each value. It does not execute the configuration file as shell code. Unknown keys and invalid values are ignored. If editing manually, keep one `KEY=value` assignment per line and use only values from the accepted-value column.
 
 ## State and logs
 
-- Installer state: `~/.local/share/redmux/install.state`
-- Log file: `~/.local/state/redmux/redmux.log`
+| Path | Purpose |
+| --- | --- |
+| `~/.local/share/redmux/install.state` | Tracks completed installer stages for a matching selection |
+| `~/.local/share/redmux/session.pid` | PID of the active REDMUX-managed desktop session |
+| `~/.local/share/redmux/session.group` | Records whether the session uses a separate process group |
+| `~/.local/share/redmux/x11.pid` | PID of a Termux:X11 process started by REDMUX |
+| `~/.local/state/redmux/redmux.log` | Timestamped activity log |
 
-The installer state tracks the selected distribution, desktop list, and completed stages. It is used to resume a matching installation. Do not edit it while an installation is running.
+Do not edit installer state or PID files while REDMUX is running. Stale PID files are checked before they are used.

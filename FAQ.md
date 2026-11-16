@@ -1,29 +1,33 @@
 # Frequently Asked Questions
 
-## Does REDMUX install Android Termux:X11 automatically?
+## Does REDMUX install the Android Termux:X11 application?
 
-REDMUX can prepare the Termux-side CLI package. The Android application must be installed separately.
+No. The Android application must be installed separately. REDMUX can offer to install the Termux-side package that provides the `termux-x11` command.
 
 ## Can I install more than one desktop environment?
 
-Yes. Select multiple desktop entries during installation using comma-separated numbers. The installer combines the selected package lists and the session menu offers the detected installed desktops when more than one is configured.
+Yes. During installation, enter comma-separated desktop selections such as `1,3`. REDMUX installs the selected package sets and offers installed configured desktops when starting a session.
 
-## Can I use REDMUX without installing its command globally?
+## Can I run REDMUX without installing its command globally?
 
-Yes. Run `./redmux` from the source checkout. Run `./redmux setup` to install the `redmux` command into Termux.
+Yes. From the source checkout, run `bash redmux`. Run `./redmux setup` to install the `redmux` command in Termux.
 
 ## Does uninstall delete my Git repository?
 
-No. REDMUX uninstall operations must not delete the cloned source repository. Full clean uninstall can remove selected Linux distribution filesystems after explicit confirmation.
+No. The uninstall workflow removes the installed REDMUX copy and, if explicitly selected and confirmed, Linux distribution filesystems. It does not delete the source repository.
 
 ## Why might a desktop fail under PRoot?
 
-Some desktop components expect systemd, logind, kernel features, or background services that PRoot cannot fully provide. Package availability and compatibility also vary by distribution release.
+Some desktop components expect systemd, logind, kernel features, or background services that PRoot cannot fully provide. Package availability and compatibility also vary by distribution release and device.
 
-## Does the progress bar show exact download bytes?
+## Does the progress indicator show exact download bytes?
 
-No. The REDMUX progress indicator represents workflow stages. PRoot-Distro and APT provide their own download/package progress output.
+No. The installer progress indicator represents workflow stages. PRoot-Distro and APT display their own download and package progress.
+
+## What does `redmux stop` stop?
+
+It signals the desktop process started and recorded by REDMUX and stops the Termux:X11 process only when REDMUX started and recorded it. It does not kill unrelated desktop processes by name.
 
 ## Is version 1.0.0 changing?
 
-No version increment is made until an official release is announced.
+The project version remains `1.0.0` until the maintainer announces an official release. Development changes are recorded under the Unreleased section of the changelog.

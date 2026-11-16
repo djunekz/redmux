@@ -93,6 +93,7 @@ desktop_installed() {
     mate) package=mate-session-manager;;
     lxde) package=lxsession;;
     gnome) package=gnome-session;;
+    *) return 1;;
   esac
   proot-distro login --shared-tmp "$REDMUX_DISTRO" -- /usr/bin/dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q 'install ok installed'
 }

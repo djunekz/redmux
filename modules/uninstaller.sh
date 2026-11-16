@@ -22,7 +22,7 @@ uninstall_redmux_only() {
   echo "REDMUX installation has been removed. The source repository was not touched."
 }
 uninstall_full() {
-  echo "PERINGATAN: Full Clean Uninstall mengremove Linux distribution filesystems."
+  echo "WARNING: A full clean uninstall removes selected Linux distribution filesystems."
   echo "The REDMUX source repository will not be touched."
   local -a installed=()
   for d in debian ubuntu kali; do
@@ -35,12 +35,12 @@ uninstall_full() {
   fi
   echo "Installed distributions recognized by REDMUX:"
   printf '  - %s\n' "${installed[@]}"
-  local choices=("${installed[@]}" "ALL (hapus semua distribusi di atas)" "Cancel")
+  local choices=("${installed[@]}" "ALL installed distributions" "Cancel")
   local selected
   selected="$(choose "Select removal target:" "${choices[@]}")"
   [[ "$selected" == "Cancel" ]] && return
   local -a targets=()
-  if [[ "$selected" == "ALL (hapus semua distribusi di atas)" ]]; then
+  if [[ "$selected" == "ALL installed distributions" ]]; then
     targets=("${installed[@]}")
   else
     targets=("$selected")
@@ -50,12 +50,12 @@ uninstall_full() {
   echo "All applications, packages, configuration, and data INSIDE those distributions will be permanently deleted."
   echo "The REDMUX repository folder will NOT be deleted."
   local expected="REMOVE ${targets[*]}" typed
-  read -r -p "Type exactly '$expected' untuk melanjutkan: " typed
+  read -r -p "Type exactly '$expected' to continue: " typed
   [[ "$typed" == "$expected" ]] || { warn "Confirmation did not match. Cancelled."; return; }
   session_stop || true
   for d in "${targets[@]}"; do
     log "Removing distribution $d."
-    proot-distro remove "$d" || warn "Failed to remove $d; periksa log dan coba lagi."
+    proot-distro remove "$d" || warn "Failed to remove $d; check the log and try again."
   done
   if confirm "Also remove the installed REDMUX program (the source repository remains safe)?"; then
     uninstall_redmux_only

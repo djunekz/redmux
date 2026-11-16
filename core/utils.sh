@@ -12,7 +12,32 @@ LOG_FILE="$REDMUX_LOG_DIR/redmux.log"
 : "${REDMUX_DESKTOPS:=$REDMUX_DESKTOP}"
 : "${REDMUX_DISPLAY:=:1}"
 : "${REDMUX_RESOLUTION:=}"
-[[ -f "$REDMUX_CONFIG" ]] && source "$REDMUX_CONFIG"
+load_config() {
+  [[ -f "$REDMUX_CONFIG" ]] || return 0
+  local key value
+  while IFS='=' read -r key value || [[ -n "$key$value" ]]; do
+    value="${value#\'}"
+    value="${value%\'}"
+    case "$key" in
+      REDMUX_DISTRO)
+        if [[ "$value" =~ ^(debian|ubuntu|kali)$ ]]; then REDMUX_DISTRO="$value"; fi
+        ;;
+      REDMUX_DESKTOP)
+        if [[ "$value" =~ ^(xfce|kde|lxqt|mate|lxde|gnome)$ ]]; then REDMUX_DESKTOP="$value"; fi
+        ;;
+      REDMUX_DESKTOPS)
+        if [[ "$value" =~ ^(xfce|kde|lxqt|mate|lxde|gnome)(,(xfce|kde|lxqt|mate|lxde|gnome))*$ ]]; then REDMUX_DESKTOPS="$value"; fi
+        ;;
+      REDMUX_DISPLAY)
+        if [[ "$value" =~ ^:[0-9]+$ ]]; then REDMUX_DISPLAY="$value"; fi
+        ;;
+      REDMUX_RESOLUTION)
+        if [[ -z "$value" || "$value" =~ ^[0-9]+x[0-9]+$ ]]; then REDMUX_RESOLUTION="$value"; fi
+        ;;
+    esac
+  done < "$REDMUX_CONFIG"
+}
+load_config
 if [[ -t 1 && -z "${NO_COLOR:-}" ]]; then
   C_RESET=$'\033[0m'; C_BOLD=$'\033[1m'; C_DIM=$'\033[2m'
   C_CYAN=$'\033[38;5;45m'; C_BLUE=$'\033[38;5;75m'; C_GREEN=$'\033[38;5;82m'
@@ -49,7 +74,7 @@ terminal_width() {
     width="$(tput cols 2>/dev/null || printf '%s' "${COLUMNS:-40}")"
   fi
   [[ "$width" =~ ^[0-9]+$ ]] || width=40
-  (( width < 32 )) && width=32
+  (( width < 24 )) && width=24
   (( width > 80 )) && width=80
   printf '%s' "$width"
 }
@@ -65,9 +90,12 @@ ui_banner() {
   else
     printf '  %sREDMUX%s\n' "$C_CYAN$C_BOLD" "$C_RESET"
   fi
-  if (( width < 48 )); then
+  if (( width < 32 )); then
+    printf '  %sTERMUX LINUX%s\n' "$C_DIM" "$C_RESET"
+    printf '  %sv%s%s\n' "$C_BOLD" "$REDMUX_VERSION" "$C_RESET"
+  elif (( width < 64 )); then
     printf '  %sTERMUX LINUX DESKTOP%s\n' "$C_DIM" "$C_RESET"
-    printf '  %sv%s · Linux on Android%s\n' "$C_BOLD" "$REDMUX_VERSION" "$C_RESET"
+    printf '  %sv%s · Android%s\n' "$C_BOLD" "$REDMUX_VERSION" "$C_RESET"
   else
     printf '  %sTERMUX LINUX DESKTOP MANAGER%s  %sv%s%s\n' "$C_DIM" "$C_RESET" "$C_BOLD" "$REDMUX_VERSION" "$C_RESET"
     printf '  %sA cleaner way to build your Linux desktop on Android.%s\n' "$C_DIM" "$C_RESET"
@@ -106,49 +134,82 @@ ui_dashboard() {
   width="$(terminal_width)"
   printf '\n'
   ui_rule "$width" '-'
-  ui_box_row 'REDMUX DASHBOARD' "$width" center
-  ui_rule "$width" '='
-  ui_box_row 'INSTALL' "$width"
-  if (( width < 36 )); then
-    ui_box_row '01  Install Linux/Desktop' "$width"
+  if (( width < 32 )); then
+    ui_box_row 'REDMUX MENU' "$width" center
+    ui_rule "$width" '='
+    ui_box_row 'INSTALL' "$width"
+    ui_box_row '01  Install Linux' "$width"
     ui_box_row '02  Start Desktop' "$width"
+    ui_box_row '' "$width"
+    ui_box_row 'SESSION' "$width"
+    ui_box_row '03  Stop Desktop' "$width"
+    ui_box_row '04  Linux Shell' "$width"
+    ui_box_row '' "$width"
+    ui_box_row 'TOOLS' "$width"
+    ui_box_row '05  Environments' "$width"
+    ui_box_row '06  Desktop Setup' "$width"
+    ui_box_row '' "$width"
+    ui_box_row 'MANAGE' "$width"
+    ui_box_row '07  Status' "$width"
+    ui_box_row '08  Configuration' "$width"
+    ui_box_row '09  Activity Logs' "$width"
+    ui_box_row '10  Uninstall' "$width"
   else
-    ui_box_row '01  Install Linux + Desktop' "$width"
+    ui_box_row 'REDMUX DASHBOARD' "$width" center
+    ui_rule "$width" '='
+    ui_box_row 'INSTALL' "$width"
+    if (( width < 36 )); then
+      ui_box_row '01  Install Linux/Desktop' "$width"
+    else
+      ui_box_row '01  Install Linux + Desktop' "$width"
+    fi
     ui_box_row '02  Start Desktop' "$width"
-  fi
-  ui_box_row '' "$width"
-  ui_box_row 'SESSION' "$width"
-  ui_box_row '03  Stop Desktop' "$width"
-  ui_box_row '04  Open Linux Shell' "$width"
-  ui_box_row '' "$width"
-  ui_box_row 'LINUX & TOOLS' "$width"
-  ui_box_row '05  Environments' "$width"
-  ui_box_row '06  Desktop Selection' "$width"
-  ui_box_row '' "$width"
-  ui_box_row 'MANAGEMENT' "$width"
-  if (( width < 36 )); then
-    ui_box_row '07  Diagnostics & Status' "$width"
-  else
+    ui_box_row '' "$width"
+    ui_box_row 'SESSION' "$width"
+    ui_box_row '03  Stop Desktop' "$width"
+    ui_box_row '04  Open Linux Shell' "$width"
+    ui_box_row '' "$width"
+    ui_box_row 'LINUX & TOOLS' "$width"
+    ui_box_row '05  Environments' "$width"
+    ui_box_row '06  Desktop Selection' "$width"
+    ui_box_row '' "$width"
+    ui_box_row 'MANAGEMENT' "$width"
     ui_box_row '07  Status & Diagnostics' "$width"
+    ui_box_row '08  Configuration' "$width"
+    ui_box_row '09  View Activity Logs' "$width"
+    ui_box_row '10  Uninstall' "$width"
   fi
-  ui_box_row '08  Configuration' "$width"
-  ui_box_row '09  View Activity Logs' "$width"
-  ui_box_row '10  Uninstall' "$width"
   ui_rule "$width" '-'
   printf '\n  %s00%s  Exit\n\n' "$C_YELLOW$C_BOLD" "$C_RESET"
 }
 
-ui_section() { printf '\n  %s-- %s --%s\n' "$C_BLUE$C_BOLD" "$1" "$C_RESET"; }
-ui_step() { printf '\n%s◆%s %s\n' "$C_BLUE" "$C_RESET" "$1"; }
+ui_section() {
+  local width label
+  width="$(terminal_width)"
+  label="${1:0:$((width - 8))}"
+  printf '\n  %s-- %s --%s\n' "$C_BLUE$C_BOLD" "$label" "$C_RESET"
+}
+ui_step() {
+  local width label
+  width="$(terminal_width)"
+  label="${1:0:$((width - 4))}"
+  printf '\n  %s◆%s %s\n' "$C_BLUE" "$C_RESET" "$label"
+}
 ui_ok() { printf '  %s✓%s %s\n' "$C_GREEN" "$C_RESET" "$1"; }
 ui_warn() { printf '  %s!%s %s\n' "$C_YELLOW" "$C_RESET" "$1" >&2; }
 ui_fail() { printf '  %s✗%s %s\n' "$C_RED" "$C_RESET" "$1" >&2; }
 ui_stage() {
-  local current="$1" total="$2" label="$3" width=28 filled empty pct
-  filled=$(( current * width / total )); empty=$(( width - filled )); pct=$(( current * 100 / total ))
-  printf '\n  %s%02d/%02d%s  %s\n  %s[' "$C_DIM" "$current" "$total" "$C_RESET" "$label" "$C_CYAN"
-  printf '%.*s' "$filled" '############################'
-  printf '%.*s' "$empty" '----------------------------'
+  local current="$1" total="$2" label="$3" term_width bar_width label_width filled empty pct
+  term_width="$(terminal_width)"
+  bar_width=$((term_width - 9))
+  label_width=$((term_width - 9))
+  (( bar_width < 8 )) && bar_width=8
+  filled=$(( current * bar_width / total ))
+  empty=$(( bar_width - filled ))
+  pct=$(( current * 100 / total ))
+  printf '\n  %s%02d/%02d%s  %.*s\n  %s[' "$C_DIM" "$current" "$total" "$C_RESET" "$label_width" "$label" "$C_CYAN"
+  printf '%*s' "$filled" '' | tr ' ' '#'
+  printf '%*s' "$empty" '' | tr ' ' '-'
   printf ']%s %3d%%%s\n' "$C_RESET" "$pct" "$C_BOLD"
 }
 ui_summary() {
@@ -157,8 +218,13 @@ ui_summary() {
   printf '\n'
   ui_rule "$width" '-'
   ui_box_row 'INSTALLATION PLAN' "$width" center
-  ui_box_row "Distribution: $1" "$width"
-  ui_box_row "Desktop(s): $2" "$width"
+  if (( width < 32 )); then
+    ui_box_row "Distro: $1" "$width"
+    ui_box_row "Desktop: $2" "$width"
+  else
+    ui_box_row "Distribution: $1" "$width"
+    ui_box_row "Desktop(s): $2" "$width"
+  fi
   ui_rule "$width" '-'
 }
 ui_complete() {
@@ -166,12 +232,20 @@ ui_complete() {
   width="$(terminal_width)"
   printf '\n'
   ui_rule "$width" '='
-  ui_box_row 'INSTALLATION COMPLETE' "$width" center
+  if (( width < 32 )); then ui_box_row 'SETUP COMPLETE' "$width" center; else ui_box_row 'INSTALLATION COMPLETE' "$width" center; fi
+  if (( width < 32 )); then
+    ui_box_row "Distro: $1" "$width"
+    ui_box_row "Desktop: $2" "$width"
+  else
+    ui_box_row "Distribution: $1" "$width"
+    ui_box_row "Desktop(s): $2" "$width"
+  fi
   ui_rule "$width" '='
-  printf '  Distribution : %s\n  Desktop(s)    : %s\n\n' "$1" "$2"
   printf '  Next steps\n'
-  if (( width < 40 )); then
-    printf '  1. Open Termux:X11 app.\n  2. Run %sredmux start%s.\n  3. Run %sredmux shell%s.\n\n' "$C_CYAN" "$C_RESET" "$C_CYAN" "$C_RESET"
+  if (( width < 32 )); then
+    printf '  1. Open X11.\n  2. Run %sredmux start%s.\n  3. Run %sredmux shell%s.\n\n' "$C_CYAN" "$C_RESET" "$C_CYAN" "$C_RESET"
+  elif (( width < 48 )); then
+    printf '  1. Open X11 app.\n  2. Run %sredmux start%s.\n  3. Run %sredmux shell%s.\n\n' "$C_CYAN" "$C_RESET" "$C_CYAN" "$C_RESET"
   else
     printf '  1. Install/open the Termux:X11 app.\n  2. Run %sredmux start%s.\n  3. Run %sredmux shell%s.\n\n' "$C_CYAN" "$C_RESET" "$C_CYAN" "$C_RESET"
   fi
@@ -183,10 +257,10 @@ run_stage() {
     info "Stage already completed; skipping: $label"
     return 0
   fi
-  progress_stage "$((stage))" "$total" "$label"
+  ui_stage "$stage" "$total" "$label"
   "$@" || { warn "Stage failed: $label. Run redmux install to resume."; return 1; }
   state_mark "$stage"
-  progress_stage "$((stage))" "$total" "$label selesai"
+  ui_ok "$label completed"
 }
 state_init() {
   local distro="$1" desktops="$2"
@@ -222,13 +296,17 @@ state_mark() {
 state_clear() { rm -f "$REDMUX_STATE" "$REDMUX_STATE.tmp"; }
 save_config() {
   umask 077
-  cat > "$REDMUX_CONFIG" <<EOF2
-REDMUX_DISTRO='$REDMUX_DISTRO'
-REDMUX_DESKTOP='$REDMUX_DESKTOP'
-REDMUX_DESKTOPS='$REDMUX_DESKTOPS'
-REDMUX_DISPLAY='$REDMUX_DISPLAY'
-REDMUX_RESOLUTION='$REDMUX_RESOLUTION'
-EOF2
+  mkdir -p "$REDMUX_CONFIG_DIR"
+  local temporary="$REDMUX_CONFIG.tmp"
+  {
+    printf 'REDMUX_DISTRO=%s\n' "$REDMUX_DISTRO"
+    printf 'REDMUX_DESKTOP=%s\n' "$REDMUX_DESKTOP"
+    printf 'REDMUX_DESKTOPS=%s\n' "$REDMUX_DESKTOPS"
+    printf 'REDMUX_DISPLAY=%s\n' "$REDMUX_DISPLAY"
+    printf 'REDMUX_RESOLUTION=%s\n' "$REDMUX_RESOLUTION"
+  } > "$temporary"
+  chmod 600 "$temporary"
+  mv "$temporary" "$REDMUX_CONFIG"
 }
 show_help() {
 cat <<'EOF2'

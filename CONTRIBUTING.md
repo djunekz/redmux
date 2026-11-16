@@ -4,41 +4,45 @@ Thank you for considering a contribution. Bug reports, tested compatibility note
 
 ## Before you start
 
-- Read the README and relevant files under `docs/`.
+- Read the README and the relevant guides under `docs/`.
 - Search existing issues before opening a new one.
 - Keep changes focused and explain the user-visible problem they solve.
-- Do not change the project version from `1.0.0` unless the maintainer explicitly announces a release.
+- Do not change the project version unless the maintainer announces a release.
 
 ## Development principles
 
 - Target Termux Bash and Android constraints; do not assume a conventional systemd-based Linux host.
-- Preserve the user's cloned source repository during all uninstall flows.
+- Preserve the user's source repository during every uninstall flow.
 - Do not silently delete Linux distributions, configuration, or user data.
-- Quote shell variables, check command failures, and make destructive actions require explicit confirmation.
+- Quote shell variables, check command failures, and require explicit confirmation for destructive actions.
 - Keep user-facing messages and documentation in English.
 - Avoid adding dependencies unless they materially improve reliability and are documented.
-- Do not add shell comments unless required for interpreter directives or otherwise agreed by maintainers.
+- Do not add explanatory comments to shell code unless required for interpreter directives or explicitly requested by the maintainer.
 
-## Testing checklist
+## Testing
 
-Run syntax checks for every shell script:
+Run the following from the repository root:
 
 ```bash
 find . -type f \( -name '*.sh' -o -name redmux \) -print0 | while IFS= read -r -d '' file; do bash -n "$file" || exit 1; done
+bash tests/test-ui.sh
+bash tests/test-config.sh
+bash tests/test-setup.sh
+bash tests/test-session-safety.sh
 ```
 
 Also verify, where practical:
 
-- `bash tests/test-ui.sh` passes at 32, 36, 40, 64, and 80 columns.
-- The main menu and `redmux help` render in Termux and plain-text output.
+- The dashboard and `redmux help` render in Termux and plain-text output.
+- Narrow terminal output does not wrap or misalign.
 - Missing dependencies produce a clear opt-in installation prompt.
-- Existing PRoot-Distro environments are detected correctly.
+- Invalid configuration values are ignored and configuration content is not executed.
 - Failed installer stages are not marked complete.
 - Re-running installation resumes only matching saved state.
-- Start/stop behavior does not terminate unrelated user processes.
+- Session stop targets only REDMUX-managed process IDs.
 - Uninstall never removes the source checkout.
 
-Runtime testing should be performed on a real Termux device when a change touches PRoot-Distro, APT, Android intents, or Termux:X11. Clearly state what was and was not tested in pull requests.
+Runtime testing is required for changes involving PRoot-Distro, APT, Android intents, or Termux:X11. State clearly what was and was not tested.
 
 ## Pull requests
 
@@ -47,7 +51,7 @@ Include:
 1. A concise problem statement.
 2. The approach and important design decisions.
 3. Test commands and their results.
-4. Device/Android/Termux details for runtime-sensitive changes.
+4. Device, Android, and Termux details for runtime-sensitive changes.
 5. Screenshots or terminal recordings for significant UI changes, with private information redacted.
 
 Do not include personal tokens, private keys, account identifiers, or unredacted home-directory details.
