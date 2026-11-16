@@ -1,0 +1,57 @@
+#!/data/data/com.termux/files/usr/bin/bash
+set -Eeuo pipefail
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+if [[ -z "${REDMUX_HOME:-}" ]]; then
+  if [[ -f "$SCRIPT_DIR/core/utils.sh" ]]; then
+    REDMUX_HOME="$SCRIPT_DIR"
+  else
+    REDMUX_HOME="${PREFIX:-/data/data/com.termux/files/usr}/share/redmux"
+  fi
+fi
+[[ -f "$REDMUX_HOME/core/utils.sh" ]] || { printf '[ERROR] REDMUX files are missing. Run this command from the extracted REDMUX folder.\n' >&2; exit 1; }
+source "$REDMUX_HOME/core/utils.sh"
+source "$REDMUX_HOME/core/distro.sh"
+source "$REDMUX_HOME/core/x11.sh"
+source "$REDMUX_HOME/core/session.sh"
+source "$REDMUX_HOME/core/desktop.sh"
+source "$REDMUX_HOME/modules/installer.sh"
+source "$REDMUX_HOME/modules/diagnostics.sh"
+source "$REDMUX_HOME/modules/configuration.sh"
+source "$REDMUX_HOME/modules/uninstaller.sh"
+
+setup_redmux() {
+  require_termux
+  local target="$PREFIX/share/redmux" bin="$PREFIX/bin/redmux"
+  mkdir -p "$target" "$PREFIX/bin"
+  if [[ "$(cd "$REDMUX_HOME" && pwd)" != "$(cd "$target" && pwd)" ]]; then
+    cp -a "$REDMUX_HOME"/. "$target"/
+  fi
+  chmod +x "$target/redmux"
+  cat > "$bin" <<'WRAPPER'
+#!/data/data/com.termux/files/usr/bin/bash
+export REDMUX_HOME="${PREFIX:-/data/data/com.termux/files/usr}/share/redmux"
+exec "$REDMUX_HOME/redmux" "$@"
+WRAPPER
+  chmod +x "$bin"
+  info "REDMUX command installed. Run: redmux"
+}
+cmd="${1:-menu}"; shift || true
+case "$cmd" in
+  menu) main_menu ;;
+  setup) setup_redmux ;;
+  install) run_installer ;;
+  start) session_start "${1:-}" ;;
+  stop) session_stop ;;
+  restart) session_stop; session_start ;;
+  shell) distro_shell "${1:-}" ;;
+  environments|env) distro_list ;;
+  desktop) desktop_menu ;;
+  status) session_status ;;
+  config) config_menu ;;
+  logs) show_logs ;;
+  diagnose|doctor) diagnostics ;;
+  uninstall) uninstall_menu ;;
+  help|-h|--help) show_help ;;
+  version|-v|--version) echo "REDMUX ${REDMUX_VERSION:-1.0.0}" ;;
+  *) die "Perintah tidak dikenal: $cmd (gunakan: redmux help)" ;;
+esac

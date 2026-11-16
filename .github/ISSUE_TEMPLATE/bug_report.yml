@@ -1,0 +1,69 @@
+name: Bug report
+description: Report a reproducible REDMUX problem
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: "Please search existing issues first. Remove private information from logs."
+  - type: textarea
+    id: summary
+    attributes:
+      label: Problem summary
+      description: What happened, and what did you expect?
+      placeholder: Describe the issue clearly.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Run ...
+        2. Select ...
+        3. Observe ...
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant output and logs
+      description: Include the complete relevant error. Redact usernames, tokens, and private paths.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: redmux-version
+    attributes:
+      label: REDMUX version
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: android
+    attributes:
+      label: Android version and device
+    validations:
+      required: true
+  - type: input
+    id: architecture
+    attributes:
+      label: Device architecture
+      placeholder: aarch64 / arm / x86_64
+  - type: input
+    id: termux
+    attributes:
+      label: Termux source and version
+  - type: input
+    id: distro-desktop
+    attributes:
+      label: Distribution and desktop environment
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues.
+          required: true
+        - label: I removed private information from logs.
+          required: true
