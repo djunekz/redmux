@@ -1,3 +1,4 @@
+cat << 'EOF' > CHANGELOG.md
 # Changelog
 
 All notable project changes are recorded here. This file follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and version numbers follow [Semantic Versioning](https://semver.org/).
@@ -38,6 +39,8 @@ All notable project changes are recorded here. This file follows [Keep a Changel
 - Markdown relative links, issue-template YAML, and SVG XML are included in the release validation checklist.
 - Physical Android, Termux, PRoot-Distro, APT, and Termux:X11 integration still requires device testing.
 
+---
+
 ## [1.0.0] - 2026-11-16
 
 ### Added
@@ -51,10 +54,33 @@ All notable project changes are recorded here. This file follows [Keep a Changel
 - Cyan and blue terminal styling with a plain-text fallback.
 - Project logo, README dashboard artwork, and terminal banner.
 - GitHub issue and pull-request templates.
-- User and contributor documentation.
+- Expanded project, user, and contributor documentation.
+
+### Changed
+
+- Reorganized dashboard hierarchy and aligned menu entries for improved readability.
+- Added consistent two-digit menu choices and clearer exit behavior.
+- Expanded README with setup, requirements, commands, configuration, paths, and limitations.
+- Rebuilt the dashboard and installation summary panels with fixed-width ASCII borders, responsive labels, and a single-column layout to prevent diagonal-looking edges, wrapped text, and misaligned frames.
+- Removed the menu SVG from the device installation flow; `assets/menu.svg` is now a README/GitHub preview only.
+- Simplified setup to install runtime files and the terminal text banner only.
+- Reworked `assets/menu.svg` so the README preview matches the complete single-column dashboard and updated the documentation to distinguish the preview from the live terminal interface.
+
+### Planned
+
+- Expand automated checks and real-device compatibility coverage.
+- Improve desktop session lifecycle reporting.
+- Add additional distribution and desktop compatibility notes as they are verified.
+
+### Documentation
+
+- Added command and configuration references.
+- Added Termux:X11 setup guide and project structure overview.
+- Added release checklist and expanded troubleshooting guidance.
 
 ### Notes
 
 - The release version is `1.0.0`.
 - `assets/logo.svg` and `assets/menu.svg` are repository artwork. `redmux setup` copies only runtime files and `assets/banner.txt`.
 - Android, PRoot-Distro, package, and desktop compatibility must be tested on a real device.
+EOF
