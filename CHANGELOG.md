@@ -1,4 +1,3 @@
-cat << 'EOF' > CHANGELOG.md
 # Changelog
 
 All notable project changes are recorded here. This file follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and version numbers follow [Semantic Versioning](https://semver.org/).
@@ -73,4 +72,3 @@ All notable project changes are recorded here. This file follows [Keep a Changel
 - The release version is `1.0.0`.
 - `assets/logo.svg` and `assets/menu.svg` are repository artwork. `redmux setup` copies only runtime files and `assets/banner.txt`.
 - Android, PRoot-Distro, package, and desktop compatibility must be tested on a real device.
-EOF
