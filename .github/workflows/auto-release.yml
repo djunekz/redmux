@@ -1,0 +1,66 @@
+
+name: Auto Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Validate version and changelog
+        id: release
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid release tag: $TAG"
+            exit 1
+          fi
+
+          if ! grep -Fq "## [$VERSION]" CHANGELOG.md; then
+            echo "Version $VERSION not found in CHANGELOG.md"
+            exit 1
+          fi
+
+          awk -v version="$VERSION" '
+            $0 ~ "^## \\[" version "\\]" {
+              found=1
+              next
+            }
+            found && /^## \[/ {
+              exit
+            }
+            found {
+              print
+            }
+          ' CHANGELOG.md > release-notes.md
+
+          if ! grep -q '[^[:space:]]' release-notes.md; then
+            echo "Changelog section is empty"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "RedMux v${{ steps.release.outputs.version }}" \
+            --notes-file release-notes.md
