@@ -14,6 +14,7 @@ bash tests/test-setup.sh
 bash tests/test-session-safety.sh
 bash tests/test-features.sh
 bash tests/test-management.sh
+bash tests/test-entrypoint.sh
 ```
 
 The tests cover:
@@ -24,6 +25,7 @@ The tests cover:
 - Session-stop safety, confirming that unrelated processes are not signalled.
 - Graphics profile detection, desktop mapping, extended configuration validation, and saved configuration values.
 - Configuration import/export, reset-safe settings, and Termux:Boot entry creation and removal.
+- Entry point dispatch, confirming that every command resolves to a loaded function and that `redmux start` accepts no arguments.
 
 ## Manual and device checks
 

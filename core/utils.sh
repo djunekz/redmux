@@ -1,5 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 REDMUX_VERSION="1.0.0"
+: "${REDMUX_HOME:=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 REDMUX_CONFIG_DIR="${REDMUX_CONFIG_DIR:-$HOME/.config/redmux}"
 REDMUX_DATA_DIR="${REDMUX_DATA_DIR:-$HOME/.local/share/redmux}"
 REDMUX_LOG_DIR="${REDMUX_LOG_DIR:-$HOME/.local/state/redmux}"
@@ -42,7 +43,7 @@ load_config() {
         if [[ -z "$value" || "$value" =~ ^[0-9]+x[0-9]+$ ]]; then REDMUX_RESOLUTION="$value"; fi
         ;;
       REDMUX_DPI)
-        if [[ -z "$value" || "$value" =~ ^[6-9][0-9]$|^[1-9][0-9]{2,3}$ ]]; then REDMUX_DPI="$value"; fi
+        if [[ -z "$value" || "$value" =~ ^([6-9][0-9]|[1-9][0-9]{2})$ ]]; then REDMUX_DPI="$value"; fi
         ;;
       REDMUX_GPU_MODE)
         if [[ "$value" =~ ^(auto|software|virgl|turnip)$ ]]; then REDMUX_GPU_MODE="$value"; fi

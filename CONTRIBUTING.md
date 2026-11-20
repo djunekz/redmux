@@ -29,6 +29,9 @@ bash tests/test-ui.sh
 bash tests/test-config.sh
 bash tests/test-setup.sh
 bash tests/test-session-safety.sh
+bash tests/test-features.sh
+bash tests/test-management.sh
+bash tests/test-entrypoint.sh
 ```
 
 Also verify, where practical:

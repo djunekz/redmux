@@ -3,7 +3,7 @@
 ## Runtime layout
 
 - `redmux` is the application entry point, setup routine, and command dispatcher.
-- `core/utils.sh` loads validated configuration, creates state directories, provides logging and prompts, renders the terminal interface, and manages installer state.
+- `core/utils.sh` resolves `REDMUX_HOME` when it is not set, loads validated configuration, creates state directories, provides logging and prompts, renders the terminal interface, and manages installer state.
 - `core/distro.sh` handles distribution validation, selection, listing, and shell access.
 - `core/desktop.sh` defines desktop names, package sets, launch commands, and package verification.
 - `core/session.sh` starts, tracks, stops, and reports REDMUX-managed desktop sessions.
@@ -24,7 +24,7 @@
 
 1. Resolve the source checkout or installed application directory through `REDMUX_HOME`.
 2. Load validated configuration values without executing the configuration file.
-3. Load core services and feature modules.
+3. Load core services and feature modules, including `core/software.sh` and `core/autostart.sh`.
 4. Parse the command and arguments.
 5. Dispatch to the requested workflow.
 

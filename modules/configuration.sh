@@ -27,7 +27,10 @@ config_menu() {
         warn "Invalid display. Use a value such as :1 or :2."
       fi
       ;;
-    4) cat "$REDMUX_CONFIG";;
+    4)
+      [[ -f "$REDMUX_CONFIG" ]] || save_config
+      cat "$REDMUX_CONFIG"
+      ;;
     5)
       read -r -p "Graphics mode [auto/software/virgl/turnip]: " v
       if [[ "$v" =~ ^(auto|software|virgl|turnip)$ ]]; then REDMUX_GPU_MODE="$v"; save_config; graphics_status; else warn "Invalid graphics mode."; fi
@@ -38,7 +41,7 @@ config_menu() {
       ;;
     7)
       read -r -p "DPI (empty for automatic, 60-999): " v
-      if [[ -z "$v" || "$v" =~ ^[6-9][0-9]$|^[1-9][0-9]{2,3}$ ]]; then REDMUX_DPI="$v"; save_config; info "DPI saved."; else warn "Invalid DPI."; fi
+      if [[ -z "$v" || "$v" =~ ^([6-9][0-9]|[1-9][0-9]{2})$ ]]; then REDMUX_DPI="$v"; save_config; info "DPI saved."; else warn "Invalid DPI."; fi
       ;;
     8)
       read -r -p "VNC display (for example :2): " v

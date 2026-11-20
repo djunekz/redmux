@@ -12,7 +12,7 @@ vnc_install() {
   info "Set a VNC password inside Linux with: redmux shell, then vncpasswd"
 }
 vnc_start() {
-  local d="${1:-$REDMUX_DISTRO}" server desktop command
+  local d="${1:-$REDMUX_DISTRO}" server desktop command xstartup
   distro_supported "$d" || die "Unsupported distribution: $d"
   distro_installed "$d" || die "$d is not installed. Run redmux install first."
   server="$(proot-distro login --shared-tmp "$d" -- /bin/bash -lc 'command -v tigervncserver || command -v vncserver' 2>/dev/null | tail -n 1)"
@@ -20,7 +20,8 @@ vnc_start() {
   desktop="$REDMUX_DESKTOP"
   desktop_installed "$desktop" "$d" || die "The configured desktop is not installed in $d."
   command="$(desktop_command "$desktop")" || die "Unsupported desktop: $desktop"
-  proot-distro login --shared-tmp "$d" -- /bin/bash -lc "mkdir -p ~/.vnc && printf '%s\n' '#!/bin/sh' 'unset SESSION_MANAGER' 'unset DBUS_SESSION_BUS_ADDRESS' '$command' > ~/.vnc/xstartup && chmod 700 ~/.vnc/xstartup"
+  xstartup="$(printf '%s\n' '#!/bin/sh' 'unset SESSION_MANAGER' 'unset DBUS_SESSION_BUS_ADDRESS' "$command" | base64 | tr -d '\n')"
+  proot-distro login --shared-tmp "$d" -- /bin/bash -lc "mkdir -p ~/.vnc && printf '%s' '$xstartup' | base64 -d > ~/.vnc/xstartup && chmod 700 ~/.vnc/xstartup"
   proot-distro login --shared-tmp "$d" -- /bin/bash -lc "if command -v tigervncserver >/dev/null 2>&1; then tigervncserver '$REDMUX_VNC_DISPLAY' -geometry '$REDMUX_VNC_RESOLUTION' -depth '$REDMUX_VNC_DEPTH' -localhost yes; else vncserver '$REDMUX_VNC_DISPLAY' -geometry '$REDMUX_VNC_RESOLUTION' -depth '$REDMUX_VNC_DEPTH' -localhost yes; fi"
   info "VNC desktop requested on display $REDMUX_VNC_DISPLAY."
   info "Connect from a VNC client to 127.0.0.1:$((5900 + ${REDMUX_VNC_DISPLAY#:}))."

@@ -14,10 +14,14 @@ redmux/
 ├── desktops/
 │   └── README.md
 ├── core/
+│   ├── autostart.sh
 │   ├── desktop.sh
 │   ├── distro.sh
+│   ├── graphics.sh
 │   ├── session.sh
+│   ├── software.sh
 │   ├── utils.sh
+│   ├── vnc.sh
 │   └── x11.sh
 ├── docs/
 ├── modules/
@@ -27,8 +31,11 @@ redmux/
 │   └── uninstaller.sh
 ├── tests/
 │   ├── test-config.sh
-│   ├── test-setup.sh
+│   ├── test-entrypoint.sh
+│   ├── test-features.sh
+│   ├── test-management.sh
 │   ├── test-session-safety.sh
+│   ├── test-setup.sh
 │   └── test-ui.sh
 ├── .gitignore
 ├── CHANGELOG.md

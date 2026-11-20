@@ -284,6 +284,9 @@ bash tests/test-ui.sh
 bash tests/test-config.sh
 bash tests/test-setup.sh
 bash tests/test-session-safety.sh
+bash tests/test-features.sh
+bash tests/test-management.sh
+bash tests/test-entrypoint.sh
 ```
 
 The automated checks cover shell syntax and dashboard layout. They do not prove that package installation, Android app integration, or a desktop session works on a physical device. See [Testing](docs/TESTING.md) before making a release.

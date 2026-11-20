@@ -25,6 +25,7 @@ All notable project changes are recorded here. This file follows [Keep a Changel
 - Added regression tests for safe configuration loading, the setup installation boundary, compact terminal widths, and session-process safety.
 - Added a quality-check guide for repeatable static and device validation.
 - Expanded dashboard layout regression coverage for narrow terminal widths.
+- Added `tests/test-entrypoint.sh` to verify that every entry point command resolves to a loaded function and that `redmux start` accepts no arguments.
 - Added Openbox, i3, Cinnamon, dwm, bspwm, Awesome, Fluxbox, IceWM, and Window Maker as desktop and window-manager choices.
 - Added guest APT package search, install, remove, and list operations.
 - Added curated theme and icon package installation.
@@ -83,6 +84,13 @@ All notable project changes are recorded here. This file follows [Keep a Changel
 - Improved startup audio behavior by attempting to start PulseAudio before launching a desktop session.
 - Aligned main-dashboard menu numbers with their corresponding actions and submenu destinations.
 - Updated help output and version fallbacks to report the unreleased `1.0.0` development version consistently.
+- Loaded `core/software.sh` and `core/autostart.sh` from the entry point so the apps, themes, wine-install, wine-run, api-install, gui, and autostart commands and the Linux Applications, Themes, Wine, Termux:API, and autostart menu items no longer fail with "command not found".
+- Fixed `redmux start` without arguments being rejected as an unknown start option, which also broke the Termux:Boot autostart entry.
+- Made `core/utils.sh` resolve `REDMUX_HOME` on its own when it is sourced without the variable, so the banner and tests no longer depend on the caller exporting it.
+- Aligned DPI validation in `core/utils.sh` and the configuration menu with the 60-999 range enforced at runtime.
+- Prevented the configuration menu from exiting when "View configuration" is chosen before a configuration file exists.
+- Fixed VNC startup script generation for window managers whose launch command contains single quotes, such as bspwm.
+- Prevented a failing `redmux themes install` from being reported as a usage error.
 
 ### Validation
 
@@ -93,6 +101,7 @@ All notable project changes are recorded here. This file follows [Keep a Changel
 - Shell syntax, configuration parsing, graphics profile selection, desktop mapping, VNC command dispatch, and regression tests are checked in the release validation pass.
 - Real-device GPU acceleration, Android lifecycle behavior, Termux:X11 rendering, VNC connectivity, and desktop compatibility still require testing on target devices.
 - Interactive CLI layout and menu navigation are covered by automated terminal-width and regression checks.
+- Entry point command dispatch is covered by `tests/test-entrypoint.sh`, and all test scripts pass after the audit fixes.
 
 ### Planned
 

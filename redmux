@@ -16,6 +16,8 @@ source "$REDMUX_HOME/core/graphics.sh"
 source "$REDMUX_HOME/core/vnc.sh"
 source "$REDMUX_HOME/core/session.sh"
 source "$REDMUX_HOME/core/desktop.sh"
+source "$REDMUX_HOME/core/software.sh"
+source "$REDMUX_HOME/core/autostart.sh"
 source "$REDMUX_HOME/modules/installer.sh"
 source "$REDMUX_HOME/modules/diagnostics.sh"
 source "$REDMUX_HOME/modules/configuration.sh"
@@ -46,7 +48,7 @@ case "$cmd" in
   menu) main_menu ;;
   setup) setup_redmux ;;
   install) run_installer ;;
-  start) session_start "${1:-}" ;;
+  start) session_start "$@" ;;
   stop) session_stop ;;
   restart) session_stop; session_start ;;
   shell) distro_shell "${1:-}" ;;
@@ -62,7 +64,9 @@ case "$cmd" in
   diagnose|doctor) diagnostics ;;
   graphics) graphics_status ;;
   apps) apps_command "$@" ;;
-  themes) [[ "${1:-install}" == install ]] && themes_install || die "Usage: redmux themes install" ;;
+  themes)
+    if [[ "${1:-install}" == install ]]; then themes_install; else die "Usage: redmux themes install"; fi
+    ;;
   wine-install) wine_install ;;
   wine-run) wine_run "$@" ;;
   api-install) termux_api_install ;;

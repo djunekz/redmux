@@ -14,6 +14,7 @@
 - [ ] Run `bash tests/test-config.sh` to validate safe configuration loading.
 - [ ] Run `bash tests/test-setup.sh` to verify the installed file boundary.
 - [ ] Run `bash tests/test-session-safety.sh` to verify unrelated processes are not signalled.
+- [ ] Run `bash tests/test-entrypoint.sh` to verify every command in the entry point resolves to a loaded function.
 - [ ] Validate relative Markdown links.
 - [ ] Validate GitHub issue-template YAML.
 - [ ] Validate `assets/logo.svg` and `assets/menu.svg` as XML.
