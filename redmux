@@ -12,6 +12,8 @@ fi
 source "$REDMUX_HOME/core/utils.sh"
 source "$REDMUX_HOME/core/distro.sh"
 source "$REDMUX_HOME/core/x11.sh"
+source "$REDMUX_HOME/core/graphics.sh"
+source "$REDMUX_HOME/core/vnc.sh"
 source "$REDMUX_HOME/core/session.sh"
 source "$REDMUX_HOME/core/desktop.sh"
 source "$REDMUX_HOME/modules/installer.sh"
@@ -51,9 +53,28 @@ case "$cmd" in
   environments|env) distro_list ;;
   desktop) desktop_menu ;;
   status) session_status ;;
-  config) config_menu ;;
+  config)
+    if (( $# )); then config_file_command "$@"; else config_menu; fi
+    ;;
+  reset) config_file_command reset ;;
+  autostart) autostart_command "${1:-status}" ;;
   logs) show_logs ;;
   diagnose|doctor) diagnostics ;;
+  graphics) graphics_status ;;
+  apps) apps_command "$@" ;;
+  themes) [[ "${1:-install}" == install ]] && themes_install || die "Usage: redmux themes install" ;;
+  wine-install) wine_install ;;
+  wine-run) wine_run "$@" ;;
+  api-install) termux_api_install ;;
+  gui) gui_manager "$@" ;;
+  tx11start) session_start "$@" ;;
+  tx11stop) session_stop ;;
+  vncstart) vnc_start "$@" ;;
+  vncstop) vnc_stop "$@" ;;
+  vnc-install) vnc_install ;;
+  vnc-start) vnc_start "${1:-}" ;;
+  vnc-stop) vnc_stop "${1:-}" ;;
+  vnc-status) vnc_status "${1:-}" ;;
   uninstall) uninstall_menu ;;
   help|-h|--help) show_help ;;
   version|-v|--version) echo "REDMUX ${REDMUX_VERSION:-1.0.0}" ;;

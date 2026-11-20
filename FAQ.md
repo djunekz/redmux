@@ -28,6 +28,6 @@ No. The installer progress indicator represents workflow stages. PRoot-Distro an
 
 It signals the desktop process started and recorded by REDMUX and stops the Termux:X11 process only when REDMUX started and recorded it. It does not kill unrelated desktop processes by name.
 
-## Is version 1.0.0 changing?
+## What is the current version?
 
-The project version remains `1.0.0` until the maintainer announces an official release. Development changes are recorded under the Unreleased section of the changelog.
+The current development package reports version `1.0.0`. New work is recorded under the Unreleased section of the changelog.

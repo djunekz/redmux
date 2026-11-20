@@ -20,6 +20,7 @@ printf '1\n' > "$REDMUX_DATA_DIR/session.group"
 printf '%s\n' "$UNRELATED_PID" > "$REDMUX_DATA_DIR/x11.pid"
 source "$ROOT/core/utils.sh"
 source "$ROOT/core/x11.sh"
+source "$ROOT/core/graphics.sh"
 source "$ROOT/core/session.sh"
 session_stop
 kill -0 "$UNRELATED_PID"

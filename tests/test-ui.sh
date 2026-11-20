@@ -31,9 +31,9 @@ for number, line in enumerate(lines, 1):
     if line.startswith("  +") or line.startswith("  |"):
         if len(line) != expected:
             raise SystemExit(f"width {expected}: border line {number} has {len(line)} columns: {line!r}")
-if not any(("REDMUX DASHBOARD" in line or "REDMUX MENU" in line) for line in lines):
+if not any(("REDMUX CONTROL CENTER" in line or "REDMUX CENTER" in line) for line in lines):
     raise SystemExit(f"width {expected}: dashboard title missing")
-if not any("10  Uninstall" in line for line in lines):
+if not any("18  Uninstall" in line for line in lines):
     raise SystemExit(f"width {expected}: final menu item missing")
 if not any("00  Exit" in line for line in lines):
     raise SystemExit(f"width {expected}: exit option missing")

@@ -18,7 +18,15 @@ x11_start() {
     return 0
   fi
   log "Starting Termux:X11 on $display."
-  termux-x11 "$display" >/dev/null 2>&1 &
+  local -a args=("$display")
+  local legacy="${REDMUX_X11_LEGACY_RUNTIME:-$REDMUX_X11_LEGACY}"
+  local debug="${REDMUX_X11_DEBUG_RUNTIME:-$REDMUX_X11_DEBUG}"
+  [[ "$legacy" == 1 ]] && args+=("-legacy-drawing")
+  if [[ "$debug" == 1 ]]; then
+    termux-x11 "${args[@]}" >> "$LOG_FILE" 2>&1 &
+  else
+    termux-x11 "${args[@]}" >/dev/null 2>&1 &
+  fi
   umask 077
   printf '%s\n' "$!" > "$REDMUX_DATA_DIR/x11.pid"
   sleep 2

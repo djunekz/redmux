@@ -8,6 +8,10 @@
 - `core/desktop.sh` defines desktop names, package sets, launch commands, and package verification.
 - `core/session.sh` starts, tracks, stops, and reports REDMUX-managed desktop sessions.
 - `core/x11.sh` checks, starts, and stops the Termux-side X11 process managed by REDMUX.
+- `core/graphics.sh` detects optional graphics helpers and creates a conservative rendering environment for the selected profile.
+- `core/vnc.sh` manages the optional guest TigerVNC server without changing the Termux:X11 session lifecycle.
+- `core/software.sh` provides guest APT package management, themes, Wine, Termux:API setup, and GUI session shortcuts.
+- `core/autostart.sh` creates and removes an optional Termux:Boot startup entry.
 - `modules/installer.sh` checks dependencies and storage, installs a distribution, prepares APT, installs desktop packages, and verifies the result.
 - `modules/diagnostics.sh` reports required commands, storage, configuration paths, and installer state.
 - `modules/configuration.sh` provides the interactive settings menu.
@@ -32,7 +36,7 @@ The dashboard uses a single-column layout and fixed-width ASCII borders. Its wid
 
 ## Configuration and state
 
-Configuration is read from `~/.config/redmux/redmux.conf`. Only known keys and validated values are accepted. The installer stores the selected distribution, desktop set, and completed stage identifiers in `~/.local/share/redmux/install.state`. State is reused only when the new selection matches the saved selection.
+Configuration is read from `~/.config/redmux/redmux.conf`. Import reads only recognized assignments and never evaluates the imported file as shell code. Only known keys and validated values are accepted. The installer stores the selected distribution, desktop set, and completed stage identifiers in `~/.local/share/redmux/install.state`. State is reused only when the new selection matches the saved selection.
 
 ## Session lifecycle
 
@@ -40,7 +44,7 @@ REDMUX records the process ID for the desktop session it starts. When `setsid` i
 
 ## Execution model
 
-REDMUX runs in Termux. Linux commands are invoked through `proot-distro login`; package installation occurs inside the selected distribution using APT. Desktop sessions are displayed through Termux:X11. PRoot does not provide a conventional Linux kernel, init system, or complete systemd/logind environment.
+REDMUX runs in Termux. Linux commands are invoked through `proot-distro login`; package installation occurs inside the selected distribution using APT. Desktop sessions are displayed through Termux:X11. Optional VNC sessions use a separate guest-side TigerVNC server and bind to localhost. PRoot does not provide a conventional Linux kernel, init system, or complete systemd/logind environment.
 
 ## Safety boundaries
 
@@ -48,4 +52,6 @@ REDMUX runs in Termux. Linux commands are invoked through `proot-distro login`; 
 - Removing the installed REDMUX copy must not remove the source checkout.
 - REDMUX stops only processes for which it has recorded process IDs; it does not kill unrelated desktop processes by name.
 - The Android Termux:X11 application is installed separately from its Termux-side command-line package.
+- Graphics helper detection is not proof of hardware acceleration; actual rendering must be measured on the target device.
+- VNC is optional, uses localhost-only binding, and requires the user to configure a VNC password inside the guest.
 - User configuration, installer state, session records, and logs are stored under the Termux home directory.

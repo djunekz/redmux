@@ -8,6 +8,7 @@ export REDMUX_CONFIG_DIR="$TMP/config"
 export REDMUX_DATA_DIR="$TMP/data"
 export REDMUX_LOG_DIR="$TMP/log"
 export REDMUX_HOME="$ROOT"
+export REDMUX_VNC_DISPLAY=":2; touch $TMP/unexpected-env-command-ran"
 mkdir -p "$HOME" "$REDMUX_CONFIG_DIR"
 printf '%s\n' \
   "REDMUX_DISTRO='ubuntu'" \
@@ -24,6 +25,8 @@ source "$ROOT/core/utils.sh"
 [[ "$REDMUX_DISPLAY" == :2 ]]
 [[ "$REDMUX_RESOLUTION" == 1920x1080 ]]
 [[ ! -e "$TMP/unexpected-command-ran" ]]
+[[ ! -e "$TMP/unexpected-env-command-ran" ]]
+[[ "$REDMUX_VNC_DISPLAY" == :2 ]]
 REDMUX_DISPLAY=:3
 save_config
 unset REDMUX_DISPLAY

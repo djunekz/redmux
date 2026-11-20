@@ -12,6 +12,8 @@ bash tests/test-ui.sh
 bash tests/test-config.sh
 bash tests/test-setup.sh
 bash tests/test-session-safety.sh
+bash tests/test-features.sh
+bash tests/test-management.sh
 ```
 
 The tests cover:
@@ -20,6 +22,8 @@ The tests cover:
 - Valid and invalid configuration values, including a check that shell statements in the configuration file are not executed.
 - The `setup` file boundary, including the rule that README SVG artwork is not copied into the Termux installation.
 - Session-stop safety, confirming that unrelated processes are not signalled.
+- Graphics profile detection, desktop mapping, extended configuration validation, and saved configuration values.
+- Configuration import/export, reset-safe settings, and Termux:Boot entry creation and removal.
 
 ## Manual and device checks
 

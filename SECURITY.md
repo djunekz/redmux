@@ -2,7 +2,7 @@
 
 ## Supported version
 
-Security reports should target the current development version. The project version remains `1.0.0` until an official release is announced.
+Security reports should target the current development version. The current development version is `1.0.0`; verify the version output before reporting a security issue.
 
 ## Reporting a vulnerability
 

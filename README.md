@@ -38,6 +38,15 @@ REDMUX is a terminal-based manager for installing a Linux distribution in Termux
 - Selection of one or more desktop environments.
 - Installation stages that can resume when the saved distribution and desktop selection match.
 - Desktop launch and stop operations through Termux:X11.
+- Optional VNC server support with localhost-only binding.
+- Graphics profiles for automatic detection, software rendering, VirGL, and Turnip/Zink environments.
+- Configurable display resolution and font DPI.
+- PulseAudio startup when available.
+- Optional Wine and Winetricks installation.
+- Guest APT package search, installation, removal, and package listing.
+- Curated GTK theme, icon, and font installation.
+- Termux:API command-line package setup.
+- X11 startup flags for software rendering, legacy drawing, and debug logging.
 - Configuration, environment listing, status, diagnostics, and activity logs.
 - Explicit confirmation before removing Linux distribution filesystems.
 
@@ -102,7 +111,7 @@ Keep Termux open while package installation is running. Do not interrupt APT or 
 | `redmux` or `redmux menu` | Open the interactive dashboard |
 | `redmux setup` | Install or refresh the launcher and runtime files |
 | `redmux install` | Install or resume Linux and desktop setup |
-| `redmux start [distro]` | Start the configured desktop session |
+| `redmux start [distro] [options]` | Start a selected desktop session |
 | `redmux stop` | Stop the REDMUX-managed desktop session and its managed X11 process |
 | `redmux restart` | Stop and start the configured desktop session |
 | `redmux shell [distro]` | Open a shell inside a Linux distribution |
@@ -110,7 +119,30 @@ Keep Termux open while package installation is running. Do not interrupt APT or 
 | `redmux desktop` | Select the default desktop environment |
 | `redmux status` | Display configuration and session status |
 | `redmux config` | Open configuration options |
-| `redmux diagnose` | Check dependencies and installation state |
+| `redmux diagnose` | Check dependencies, storage, and graphics capabilities |
+| `redmux graphics` | Inspect detected graphics helpers and rendering profile |
+| `redmux apps search QUERY` | Search guest APT packages |
+| `redmux apps install PACKAGE` | Install guest packages |
+| `redmux apps remove PACKAGE` | Remove guest packages |
+| `redmux apps list` | List installed guest packages |
+| `redmux themes install` | Install curated themes and icons |
+| `redmux wine-install` | Install Wine and Winetricks |
+| `redmux wine-run FILE.exe` | Run a Windows executable through Wine |
+| `redmux api-install` | Install the Termux:API CLI package |
+| `redmux autostart enable` | Create a Termux:Boot startup entry |
+| `redmux config export PATH` | Export validated settings |
+| `redmux config import PATH` | Import validated settings |
+| `redmux reset` | Reset settings without deleting Linux environments |
+| `redmux gui --start x11` | Start the X11 desktop |
+| `redmux gui --start vnc` | Start the VNC desktop |
+| `redmux gui --kill` | Stop REDMUX-managed X11 and configured VNC sessions |
+| `redmux tx11start` / `redmux tx11stop` | Termux:X11 startup and stop aliases |
+| `redmux vncstart` / `redmux vncstop` | VNC startup and stop aliases |
+| `redmux start --nogpu --legacy` | Start with software rendering and legacy X11 drawing |
+| `redmux vnc-install` | Install the optional guest TigerVNC server |
+| `redmux vnc-start [distro]` | Start the configured VNC desktop |
+| `redmux vnc-stop [distro]` | Stop the configured VNC display |
+| `redmux vnc-status [distro]` | List VNC sessions |
 | `redmux logs` | Display recent REDMUX logs |
 | `redmux uninstall` | Open the guarded removal workflow |
 | `redmux version` | Print the installed version |
@@ -128,7 +160,7 @@ The dashboard accepts options `01` through `10`. Enter `00` or `0` to exit; sing
 - Ubuntu
 - Kali Linux
 
-### Desktop environments
+### Desktop environments and window managers
 
 - XFCE4
 - KDE Plasma
@@ -136,8 +168,25 @@ The dashboard accepts options `01` through `10`. Enter `00` or `0` to exit; sing
 - MATE
 - LXDE
 - GNOME
+- Openbox
+- i3
+- Cinnamon
+- dwm
+- bspwm
+- Awesome
+- Fluxbox
+- IceWM
+- Window Maker
 
 Package names, installation checks, and launch commands are defined in `core/desktop.sh`. PRoot compatibility varies. Some desktop components expect systemd, logind, kernel features, or background services that PRoot cannot fully provide. XFCE4 is a practical lightweight starting point, but compatibility must be checked on the target device.
+
+## Graphics and VNC
+
+REDMUX provides `auto`, `software`, `virgl`, and `turnip` graphics profiles. Use `redmux graphics` to inspect detected helpers and the selected profile. Detection does not guarantee hardware acceleration; validate rendering on the target device.
+
+Optional VNC support is available with `redmux vnc-install`, `redmux vnc-start`, `redmux vnc-status`, and `redmux vnc-stop`. Configure a password inside the Linux guest with `vncpasswd`. REDMUX requests localhost-only VNC binding.
+
+`redmux start` also accepts `--desktop KEY` or `--xstartup KEY`, `--nogpu`, `--legacy`, and `--debug`. Optional boot startup uses Termux:Boot: run `redmux autostart enable` after installing the Termux:Boot Android application.
 
 ## Configuration
 
@@ -159,7 +208,14 @@ The user configuration file is:
 | `REDMUX_DESKTOP` | `xfce` | Default desktop environment |
 | `REDMUX_DESKTOPS` | `xfce` | Comma-separated configured desktop environments |
 | `REDMUX_DISPLAY` | `:1` | Termux:X11 display identifier |
-| `REDMUX_RESOLUTION` | Empty | Reserved setting; not currently applied |
+| `REDMUX_RESOLUTION` | Empty | Requested X11 framebuffer size |
+| `REDMUX_DPI` | Empty | Optional Xft and Qt font DPI |
+| `REDMUX_GPU_MODE` | `auto` | `auto`, `software`, `virgl`, or `turnip` |
+| `REDMUX_VNC_DISPLAY` | `:2` | Optional VNC display |
+| `REDMUX_VNC_RESOLUTION` | `1280x720` | VNC virtual display size |
+| `REDMUX_VNC_DEPTH` | `24` | VNC color depth: 16, 24, or 32 |
+| `REDMUX_X11_LEGACY` | `0` | Enable Termux:X11 legacy drawing mode |
+| `REDMUX_X11_DEBUG` | `0` | Log Termux:X11 startup output |
 
 Use `redmux config` to change supported values. REDMUX reads only recognized assignments and validates their values; it does not execute the configuration file as shell code.
 
@@ -172,6 +228,7 @@ Use `redmux config` to change supported values. REDMUX reads only recognized ass
 | `~/.local/share/redmux/session.pid` | Active REDMUX-managed session process ID |
 | `~/.local/share/redmux/session.group` | Whether the session was started in its own process group |
 | `~/.local/share/redmux/x11.pid` | REDMUX-managed Termux:X11 process ID |
+| `~/.local/share/redmux/graphics.pid` | REDMUX-managed VirGL helper process ID |
 | `~/.local/state/redmux/redmux.log` | Activity log |
 | `$PREFIX/share/redmux/` | Installed runtime files and terminal banner |
 | `$PREFIX/bin/redmux` | Command launcher |
